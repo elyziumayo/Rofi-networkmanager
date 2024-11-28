@@ -3,7 +3,7 @@
 Welcome to the Rofi NetworkManager integration project! 🚀 This tool combines the power of Rofi and NetworkManager to create a sleek, fast, and user-friendly way to manage your Wi-Fi connections, all within a beautiful Rofi interface. 🎉
 Features 🛠️
 
-<div style="border: 2px solid black; padding: 10px; border-radius: 5px;">
+<div style="border: 2px solid grey; padding: 10px; border-radius: 5px;">
 Wi-Fi Management: Select and connect to available Wi-Fi networks in a flash. No more fumbling with your connection settings! 🔌✨
 Signal Strength Indicator: Visualize your Wi-Fi signal strength. It shows up as a bar, but sometimes... it’s a mystery (hello, stars 🌟)! [Known Bug 🐛]
 Customizable Interface: Tweak the .rasi theme to make the Wi-Fi list look just how you want it. 🎨🖌️
