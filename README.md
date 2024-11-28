@@ -3,7 +3,8 @@
 Welcome to the Rofi NetworkManager integration project! 🚀 This tool combines the power of Rofi and NetworkManager to create a sleek, fast, and user-friendly way to manage your Wi-Fi connections, all within a beautiful Rofi interface. 🎉
 Features 🛠️
 
-<div style="border: 2px solid grey; padding: 10px; border-radius: 5px;">
+### What It Provides 📡
+<div>
 Wi-Fi Management: Select and connect to available Wi-Fi networks in a flash. No more fumbling with your connection settings! 🔌✨
 Signal Strength Indicator: Visualize your Wi-Fi signal strength. It shows up as a bar, but sometimes... it’s a mystery (hello, stars 🌟)! [Known Bug 🐛]
 Customizable Interface: Tweak the .rasi theme to make the Wi-Fi list look just how you want it. 🎨🖌️
@@ -13,13 +14,14 @@ Custom Rofi .rasi: You can personalize the entire interface with your own style.
 
 ### 🚀 Installation
 Prerequisites 📦
-
+<div>
 Before you start, make sure you have the following installed:
 
-- **Rofi 
-- **NetworkManager (with nmcli support)
-- **bash (because, well, we need it to run the script)
-
+- Rofi 
+- NetworkManager (with nmcli support)
+- bash (because, well, we need it to run the script)
+</div>
+  
 ### To install them, just run:
 On Arch Linux and Artix Linux:
 
