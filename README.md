@@ -21,7 +21,8 @@ Features 🛠️
 ### 🚀 Installation
 Prerequisites 📦
 <div>
-Before you start, make sure you have the following installed:
+
+ Before you start, make sure you have the following installed:
 
 - Rofi 
 - NetworkManager (with nmcli support)
@@ -30,6 +31,7 @@ Before you start, make sure you have the following installed:
   
 ### To install them, just run:
 <div>
+
 On Arch Linux and Artix Linux:
 
  ```bash
@@ -48,7 +50,8 @@ cd rofi-networkmanager
 ### Configuration 🛠️
 
 <div>
-- Rofi Customization:
+
+ - Rofi Customization:
 The default .rasi theme file is located at ./config/rofi-wifi.rasi. 🎨 Feel free to customize the theme to match your aesthetic. It's like a blank canvas... but with Wi-Fi! 🖼️
 
 - Modify the Script:
