@@ -3,7 +3,7 @@
 Welcome to the Rofi NetworkManager integration project! 🚀 This tool combines the power of Rofi and NetworkManager to create a sleek, fast, and user-friendly way to manage your Wi-Fi connections, all within a beautiful Rofi interface. 🎉
 Features 🛠️
 
-### What It Provides 📡
+### 📡 What It Provides 
 <div>
 
 - Wi-Fi Management
@@ -29,7 +29,7 @@ Prerequisites 📦
 - bash (because, well, we need it to run the script)
 </div>
   
-### To install them, just run:
+### ⚙️ To install them, just run:
 <div>
 
 On Arch Linux and Artix Linux:
@@ -39,7 +39,7 @@ sudo pacman -S rofi networkmanager
  ```
 </div>
 
-### Clone the Repository 🧑‍💻
+### 🧑‍💻 Clone the Repository
 
 Now, grab the code from GitHub (don’t worry, it’s free!):
 
@@ -47,7 +47,7 @@ Now, grab the code from GitHub (don’t worry, it’s free!):
 git clone https://github.com/yourusername/rofi-networkmanager.git
 cd rofi-networkmanager
 ```
-### Configuration 🛠️
+### 🛠️ Configuration
 
 <div>
 
@@ -57,7 +57,7 @@ The default .rasi theme file is located at ./config/rofi-wifi.rasi. 🎨 Feel fr
 - Modify the Script:
 The script responsible for fetching networks is in ./scripts/rofi-wifi.sh. 🖥️ Make it your own by tweaking the code or adding more awesome features!
 
--Set Up Rofi:
+- Set Up Rofi:
 
 Make sure the script is executable:
 
