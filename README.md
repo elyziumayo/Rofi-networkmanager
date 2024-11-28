@@ -58,6 +58,7 @@ The default .rasi theme file is located at ./config/rofi-wifi.rasi. 🎨 Feel fr
 The script responsible for fetching networks is in ./scripts/rofi-wifi.sh. 🖥️ Make it your own by tweaking the code or adding more awesome features!
 
 -Set Up Rofi:
+
 Make sure the script is executable:
 
 ```bash
