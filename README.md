@@ -44,7 +44,7 @@ sudo pacman -S rofi networkmanager
 Now, grab the code from GitHub (don’t worry, it’s free!):
 
 ```bash
-git clone https://github.com/yourusername/rofi-networkmanager.git
+https://github.com/elysiumayo/Rofi-networkmanager.git
 cd rofi-networkmanager
 ```
 ### 🛠️ Configuration
