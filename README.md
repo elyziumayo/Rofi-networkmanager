@@ -5,6 +5,7 @@ Features 🛠️
 
 ### What It Provides 📡
 <div>
+
  - Wi-Fi Management
  
  - Signal Strength Indicator
@@ -66,15 +67,21 @@ Make sure the script is executable:
 ### 💡 Notes for Custom .rasi Scrubbing
 
 </div>
+
 - Don’t just copy-paste the .rasi file! 📝 If you plan to customize it, scrub through the code and remove any unnecessary parts. It’s a modified version of another creator’s file, and we don’t want to cause any conflicts. ⚔️
+
 - Check out the original theme from the creator here if you want to see where it all began. 🙌
+
 </div>
 
 ### 🎯 Next Steps
 
 <div>
+
 - Fix the stars bug: We’re still investigating why stars sometimes appear in place of the signal bar. Any contributions are welcome to fix this cosmic error! 🌌
+
 - Make it prettier: Add more customization options to the .rasi files and make this Wi-Fi interface the most stylish thing on your desktop. 💅
+
 </div>
 
 ### Note: This script works perfectly on Arch Linux and Artix Linux (tested and confirmed). 🎉 However, it hasn't been tested on other Linux distributions yet. If you try it on a different distro and encounter issues, feel free to open an issue, and we’ll take a look! 🚨
