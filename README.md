@@ -6,15 +6,15 @@ Features 🛠️
 ### What It Provides 📡
 <div>
 
- - Wi-Fi Management
+- Wi-Fi Management
  
- - Signal Strength Indicator
+- Signal Strength Indicator
  
- - Customizable Interface
+- Customizable Interface
  
- - Super Easy
+- Super Easy
  
- - Custom Rofi .rasi
+- Custom Rofi .rasi
    
 </div>
 
@@ -32,17 +32,19 @@ Before you start, make sure you have the following installed:
 <div>
 On Arch Linux and Artix Linux:
 
+ ```bash
 sudo pacman -S rofi networkmanager
-
+ ```
 </div>
 
 ### Clone the Repository 🧑‍💻
 
 Now, grab the code from GitHub (don’t worry, it’s free!):
 
+```bash
 git clone https://github.com/yourusername/rofi-networkmanager.git
 cd rofi-networkmanager
-
+```
 ### Configuration 🛠️
 
 <div>
@@ -55,7 +57,10 @@ The script responsible for fetching networks is in ./scripts/rofi-wifi.sh. 🖥�
 -Set Up Rofi:
 Make sure the script is executable:
 
-        chmod +x ./scripts/rofi-wifi.sh
+```bash
+chmod +x ./scripts/rofi-wifi.sh
+ ```
+
 </div>
 
 ### 🐞 Known Issues
