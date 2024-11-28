@@ -6,10 +6,15 @@ Features 🛠️
 ### What It Provides 📡
 <div>
  - Wi-Fi Management
+ 
  - Signal Strength Indicator
+ 
  - Customizable Interface
+ 
  - Super Easy
+ 
  - Custom Rofi .rasi
+   
 </div>
 
 ### 🚀 Installation
