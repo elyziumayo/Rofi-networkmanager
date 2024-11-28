@@ -62,7 +62,7 @@ The script responsible for fetching networks is in ./scripts/rofi-wifi.sh. ðŸ–¥ï
 Make sure the script is executable:
 
 ```bash
-chmod +x ./scripts/rofi-wifi.sh
+chmod +x ~/scripts/rofi-wifi.sh
  ```
 
 </div>
