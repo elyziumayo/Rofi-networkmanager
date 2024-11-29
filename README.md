@@ -72,7 +72,7 @@ chmod +x ~/Scripts/network.sh
 
 - Signal Strength Bug: Occasionally, the signal strength indicator shows stars 🌟 instead of a signal bar 📶. Weird, right? We’re on it! 🔧 If you find more bugs, let us know, and we’ll try to squash them like the pesky little creatures they are. 🐜
 
-- Customization Required: The .rasi theme is a modified version of a theme from another creator. If you see anything funky in the design, scrub the code and make it yours! ✨
+- Customization Required: The .rasi theme is a modified version of a theme from [Adi1090x](https://github.com/adi1090x/rofi.git). If you see anything funky in the design, scrub the code and make it yours! ✨
 
 ### 💡 Notes for Custom .rasi Scrubbing
 
