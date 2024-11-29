@@ -45,8 +45,9 @@ Now, grab the code from GitHub (don’t worry, it’s free!):
 
 ```bash
 https://github.com/elysiumayo/Rofi-networkmanager.git
-cd Rofi-networkmanager 
+cd Rofi-networkmanager
 ```
+- Move the Script folder to home directory 
 ### 🛠️ Configuration
 
 <div>
@@ -62,7 +63,7 @@ The script responsible for fetching networks is in ./scripts/rofi-wifi.sh. 🖥�
 Make sure the script is executable:
 
 ```bash
-chmod +x ~/Rofi-networkmanager/Scripts/network.sh
+chmod +x ~/Scripts/network.sh
  ```
 
 </div>
