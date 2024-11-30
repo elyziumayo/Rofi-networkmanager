@@ -27,6 +27,7 @@ Prerequisites 📦
 - Rofi 
 - NetworkManager (with nmcli support)
 - bash (because, well, we need it to run the script)
+- Swaync or any notification menue
 </div>
   
 ### ⚙️ To install them, just run:
