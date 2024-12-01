@@ -54,7 +54,7 @@ Move the 'Scripts' folder to home directory
 <div>
 
  - Rofi Customization:
-The default rofi theme for my script is located at ./Scripts/wifi.rasi. 🎨 Feel free to customize the theme to match your aesthetic. It's like a blank canvas... but with Wi-Fi! 🖼️
+The default rofi theme for my script is located at ~/Scripts/wifi.rasi. 🎨 Feel free to customize the theme to match your aesthetic. It's like a blank canvas... but with Wi-Fi! 🖼️
 
 - Modify the Script:
 The script responsible for fetching networks is in ./scripts/rofi-wifi.sh. 🖥️ Make it your own by tweaking the code or adding more awesome features!
