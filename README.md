@@ -36,7 +36,7 @@ Prerequisites 📦
 On Arch Linux and Artix Linux:
 
  ```bash
-sudo pacman -S rofi networkmanager
+sudo pacman -S rofi networkmanager swaync 
  ```
 </div>
 
