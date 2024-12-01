@@ -48,7 +48,7 @@ Now, grab the code from GitHub (don’t worry, it’s free!):
 https://github.com/elysiumayo/Rofi-networkmanager.git
 cd Rofi-networkmanager
 ```
-Move the Scripts folder to home directory 
+Move the 'Scripts' folder to home directory 
 ### 🛠️ Configuration
 
 <div>
