@@ -37,7 +37,7 @@ get_wifi_list() {
 # Function to get the list of saved networks
 get_saved_networks() {
     # List saved connections
-    nmcli connection show | grep -E "^\s*([^\s]+)" | awk '{print $1}'  # Only show SSID names
+    nmcli -t -f NAME connection show  # Only show SSID names
 }
 
 # Function to determine the current network state and return the toggle option
