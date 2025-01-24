@@ -1,22 +1,7 @@
-### 🌐 Rofi NetworkManager Integration 📡
+### 🌐 Rofi NetworkManager Integration 
 
 Welcome to the Rofi NetworkManager integration project! 🚀 This tool combines the power of Rofi and NetworkManager to create a sleek, fast, and user-friendly way to manage your Wi-Fi connections, all within a beautiful Rofi interface. 🎉
 Features 🛠️
-
-### 📡 What It Provides 
-<div>
-
-- Wi-Fi Management
- 
-- Signal Strength Indicator
- 
-- Customizable Interface
- 
-- Super Easy
- 
-- Custom Rofi .rasi
-   
-</div>
 
 ### 🚀 Installation
 Prerequisites 📦
@@ -27,6 +12,8 @@ Prerequisites 📦
 - Rofi 
 - NetworkManager (with nmcli support)
 - bash (because, well, we need it to run the script)
+- ttf-jetbrains-mono-nerd
+- otf-font-awesome
 - Swaync or any notification menue
 </div>
   
@@ -36,7 +23,7 @@ Prerequisites 📦
 On Arch Linux and Artix Linux:
 
  ```bash
-sudo pacman -S rofi networkmanager swaync 
+sudo pacman -S rofi networkmanager swaync otf-font-awesome ttf-jetbrains-mono-nerd
  ```
 </div>
 
@@ -85,15 +72,3 @@ chmod +x ~/Scripts/network.sh
 
 </div>
 
-### 🎯 Next Steps
-
-<div>
-
-- Fix the stars bug: We’re still investigating why stars sometimes appear in place of the signal bar. Any contributions are welcome to fix this cosmic error! 🌌
-
-- Make it prettier: Add more customization options to the .rasi files and make this Wi-Fi interface the most stylish thing on your desktop. 💅
-
-</div>
-
-### Note: This script works perfectly on Arch Linux and Artix Linux (tested and confirmed). 🎉 However, it hasn't been tested on other Linux distributions yet. If you try it on a different distro and encounter issues, feel free to open an issue, and we’ll take a look! 🚨
-### Enjoy managing your Wi-Fi in style! 🎉 If you run into any problems,hesitate to open an issue on GitHub. Let’s make Wi-Fi connections fun again! 📶😄
