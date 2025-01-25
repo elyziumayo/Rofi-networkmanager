@@ -62,13 +62,3 @@ chmod +x ~/Scripts/network.sh
 
 - Customization Required: The .rasi theme is a modified version of a theme from [Adi1090x](https://github.com/adi1090x/rofi.git). If you see anything funky in the design, scrub the code and make it yours! ✨
 
-### 💡 Notes for Custom .rasi Scrubbing
-
-</div>
-
-- Don’t just copy-paste the .rasi file! 📝 If you plan to customize it, scrub through the code and remove any unnecessary parts. It’s a modified version of another creator’s file, and we don’t want to cause any conflicts. ⚔️
-
-- Check out the original theme from the creator here if you want to see where it all began. 🙌
-
-</div>
-
