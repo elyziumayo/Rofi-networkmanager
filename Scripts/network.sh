@@ -70,7 +70,7 @@ toggle_networks() {
     network_status=$(nmcli networking)
 
     if [[ "$network_status" == "enabled" ]]; then
-        echo "󰖪  Disable Networking"
+        echo "󰖪 Disable Networking"
     else
         echo "󰖩 Enable Networking"
     fi
@@ -98,7 +98,7 @@ full_list="$network_option\n$reload_option\n$hidden_network_option\n$view_saved_
 while true; do
     chosen_network=$(echo -e "$full_list" | \
         rofi -dmenu -i -p "Select WiFi Network" \
-        -theme wifi.rasi )
+        -theme ~/Scripts/wifi.rasi )
 
     # Exit if no network was chosen (Escape pressed)
     if [[ -z "$chosen_network" ]]; then
@@ -107,11 +107,17 @@ while true; do
 
     # Handle network toggle (enable/disable)
     if [[ "$chosen_network" == "$network_option" ]]; then
-        if [[ "$network_option" == "󰖪  Disable Networking" ]]; then
-            nmcli networking off
+        if [[ "$network_option" == "󰖪 Disable Networking" ]]; then
+            if ! nmcli networking off; then
+                notify-send "Network" "Failed to disable networking."
+                continue
+            fi
             notify-send "Network" "All networks disabled."
         else
-            nmcli networking on
+            if ! nmcli networking on; then
+                notify-send "Network" "Failed to enable networking."
+                continue
+            fi
             notify-send "Network" "All networks enabled."
         fi
         break
@@ -120,6 +126,11 @@ while true; do
     # Handle reload option
     if [[ "$chosen_network" == "$reload_option" ]]; then
         notify-send "WiFi" "Reloading networks..."
+        if ! nmcli device wifi rescan; then
+            notify-send "WiFi" "Failed to rescan networks."
+            continue
+        fi
+        sleep 1  # Give time for the scan to complete
         networks=$(get_wifi_list)
         full_list="$network_option\n$reload_option\n$hidden_network_option\n$view_saved_networks_option\n$networks"
         continue
@@ -127,36 +138,33 @@ while true; do
 
     # Handle hidden network connection
     if [[ "$chosen_network" == "$hidden_network_option" ]]; then
-        while true; do
-            # Get SSID for hidden network
-            hidden_ssid=$(echo -e "󰌍 Back to Main Menu\n" | \
-                rofi -dmenu -i -p "Enter Hidden Network SSID" -lines 0 -theme ~/Scripts/wifi.rasi)
+        # Get SSID for hidden network
+        hidden_ssid=$(echo -e "󰌍 Back to Main Menu\n" | \
+            rofi -dmenu -i -p "Enter Hidden Network SSID" -lines 0 -theme ~/Scripts/wifi.rasi)
 
-            # Handle back option or Escape for SSID
-            if [[ -z "$hidden_ssid" ]] || [[ "$hidden_ssid" == "󰌍 Back to Main Menu" ]]; then
-                break  # Return to main menu
-            fi
+        # Handle back option or Escape for SSID
+        if [[ -z "$hidden_ssid" ]] || [[ "$hidden_ssid" == "󰌍 Back to Main Menu" ]]; then
+            continue  # Return to main menu
+        fi
 
-            # Get password for hidden network
-            password=$(echo -e "󰌍 Back to SSID\n" | \
-                rofi -dmenu -i -p "Enter Password" -password -lines 0 -theme ~/Scripts/wifi.rasi)
+        # Get password for hidden network
+        password=$(echo -e "󰌍 Back to Networks\n" | \
+            rofi -dmenu -i -p "Enter Password" -password -lines 0 -theme ~/Scripts/wifi.rasi)
 
-            # Handle back option or Escape for password
-            if [[ -z "$password" ]] || [[ "$password" == "󰌍 Back to SSID" ]]; then
-                continue  # Go back to SSID input
-            fi
+        # Handle back option or Escape for password
+        if [[ -z "$password" ]] || [[ "$password" == "󰌍 Back to Networks" ]]; then
+            continue  # Return to main menu
+        fi
 
-            # Try to connect to the hidden network
-            notify-send "WiFi" "Attempting to connect to hidden network $hidden_ssid..."
-            if nmcli device wifi connect "$hidden_ssid" password "$password" hidden yes; then
-                notify-send "WiFi" "Successfully connected to hidden network $hidden_ssid"
-                break 2  # Return to main menu after successful connection
-            else
-                notify-send "WiFi" "Failed to connect to hidden network $hidden_ssid"
-                continue  # Try again from SSID input
-            fi
-        done
-        continue  # Return to main menu
+        # Try to connect to the hidden network
+        notify-send "WiFi" "Attempting to connect to hidden network $hidden_ssid..."
+        if nmcli device wifi connect "$hidden_ssid" password "$password" hidden yes; then
+            notify-send "WiFi" "Successfully connected to hidden network $hidden_ssid"
+            break  # Exit to end the script after successful connection
+        else
+            notify-send "WiFi" "Failed to connect to hidden network $hidden_ssid"
+            continue  # Return to main menu after failed connection
+        fi
     fi
 
     # Handle viewing saved networks
