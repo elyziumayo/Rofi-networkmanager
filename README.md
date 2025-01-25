@@ -32,7 +32,7 @@ sudo pacman -S rofi networkmanager swaync otf-font-awesome ttf-jetbrains-mono-ne
 Now, grab the code from GitHub (don’t worry, it’s free!):
 
 ```bash
-https://github.com/elysiumayo/Rofi-networkmanager.git
+git clone https://github.com/elysiumayo/Rofi-networkmanager.git
 cd Rofi-networkmanager
 ```
 Move the 'Scripts' folder to home directory 
