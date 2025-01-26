@@ -56,5 +56,5 @@ chmod +x ~/Scripts/network.sh
 </div>
 
 ### 🐞 Known Issues
- -Find and report
+ - Find and raise issue 
 
