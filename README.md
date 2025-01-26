@@ -41,12 +41,11 @@ Move the 'Scripts' folder to home directory
 <div>
 
  - Rofi Customization:
-The default rofi theme for my script is located at ~/Scripts/wifi.rasi. 🎨 Feel free to customize the theme to match your aesthetic. It's like a blank canvas... but with Wi-Fi! 🖼️
+The default rofi theme for my script is located at ~/Scripts/wifi.rasi. 🎨 Feel free to customize the theme to match your aesthetic. It's like a blank canvas... but with Wi-Fi! 🖼️ , The .rasi theme is a modified version of a theme from [Adi1090x](https://github.com/adi1090x/rofi.git). If you see anything funky in the design, scrub the code and make it yours! ✨
 
 - Modify the Script:
 The script responsible for fetching networks is in ./scripts/rofi-wifi.sh. 🖥️ Make it your own by tweaking the code or adding more awesome features!
 
-- Set Up Rofi:
 
 Make sure the script is executable:
 
@@ -57,8 +56,5 @@ chmod +x ~/Scripts/network.sh
 </div>
 
 ### 🐞 Known Issues
-
-- Signal Strength Bug: Occasionally, the signal strength indicator shows stars 🌟 instead of a signal bar 📶. Weird, right? We’re on it! 🔧 If you find more bugs, let us know, and we’ll try to squash them like the pesky little creatures they are. 🐜
-
-- Customization Required: The .rasi theme is a modified version of a theme from [Adi1090x](https://github.com/adi1090x/rofi.git). If you see anything funky in the design, scrub the code and make it yours! ✨
+ -Find and report
 
