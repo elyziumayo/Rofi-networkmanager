@@ -38,7 +38,7 @@ otf-font-awesome
 
 1. Clone this repo (or download it, we don't judge)
 ```bash
-git clone https://github.com/elysiumayo/Rofi-networkmanager.git
+git clone https://github.com/elyziumayo/Rofi-networkmanager.git
 ```
 
 2. Make it executable (give it superpowers)
