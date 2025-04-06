@@ -27,6 +27,7 @@ A sleek, modern network manager that turns the mundane task of connecting to WiF
 <p align="center">
 <img src=https://github.com/elyziumayo/Rofi-networkmanager/blob/b85d6394c3d253cfc13819a514eb6dff9ff7454c/image.png>
 </p>
+
 ## 🛠️ Prerequisites
 
 ```bash
