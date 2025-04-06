@@ -23,6 +23,10 @@ A sleek, modern network manager that turns the mundane task of connecting to WiF
 - 🕵️ **Hidden Network Support** - For those who like to play hide and seek with their WiFi
 - 🔄 **Quick Network Toggle** - On/Off faster than your New Year's resolutions
 
+## 👾 Take a look 
+
+![Divider](https://github.com/elyziumayo/Rofi-networkmanager/blob/b85d6394c3d253cfc13819a514eb6dff9ff7454c/image.png)
+
 ## 🛠️ Prerequisites
 
 ```bash
