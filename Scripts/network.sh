@@ -149,7 +149,7 @@ while true; do
 
         # Get password for hidden network
         password=$(echo -e "󰌍 Back to Networks\n" | \
-            rofi -dmenu -i -p "Enter Password" -password -lines 0 -theme ~/Scripts/wifi.rasi)
+            rofi -dmenu -i -p "Enter Password" -password -lines 0 -theme ~/Scripts/wifi.rasi -theme-str 'listview {lines: 4;}')
 
         # Handle back option or Escape for password
         if [[ -z "$password" ]] || [[ "$password" == "󰌍 Back to Networks" ]]; then
@@ -211,7 +211,7 @@ while true; do
             while true; do
                 # Get password from Rofi prompt with back option
                 password=$(echo -e "󰌍 Back to Networks\n" | \
-                    rofi -dmenu -i -p "Enter Password" -password -lines 0 -theme ~/Scripts/wifi.rasi)
+                    rofi -dmenu -i -p "Enter Password" -password -lines 0 -theme ~/Scripts/wifi.rasi -theme-str 'listview {lines: 4;}') 
 
                 # Handle back option or Escape
                 if [[ -z "$password" ]] || [[ "$password" == "󰌍 Back to Networks" ]]; then
