@@ -199,12 +199,13 @@ while true; do
     fi
 
     # Handle regular network connection
-    ssid=$(echo "$chosen_network" | awk '{print $2}')
+    # Extract SSID by removing the icon at the beginning
+    ssid=$(echo "$chosen_network" | sed 's/^. //')
     notify-send "WiFi" "Attempting to connect to $ssid..."
 
-    # Check if the network is already known
-    if nmcli connection show | grep -q "^$ssid "; then
-        nmcli connection up "$ssid"
+    # Check if the network is already known - use exact matching with name
+    if nmcli -t -f NAME connection show | grep -qx "$ssid"; then
+        nmcli connection up id "$ssid"
     else
         # Check if network is secured
         if echo "$chosen_network" | grep -q "WPA\|WEP"; then
