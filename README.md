@@ -1,4 +1,4 @@
-# 🌐 Rofi Network Manager
+# 🌐 Rofi Network Manager ( V 1.1 )
 
 <div align="center">
 
