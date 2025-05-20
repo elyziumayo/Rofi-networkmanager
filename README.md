@@ -73,6 +73,10 @@ The script uses a custom Rofi theme (`wifi.rasi`) inspired by [Adi1090x's](https
 
 Make it yours! Change colors, fonts, or add more unicorns 🦄 - we won't stop you!
 
+## ✨ Version 1.1
+
+New version in `test` branch. It's like magic, but with more bugs! Report them if you find any!
+
 ## 🐛 Troubleshooting
 
 - **Q:** Why isn't it working?
@@ -80,10 +84,6 @@ Make it yours! Change colors, fonts, or add more unicorns 🦄 - we won't stop y
 
 - **Q:** The WiFi list is empty!
 - **A:** Your WiFi adapter might be having an existential crisis
-
-## 🤝 Contributing
-
-Found a bug? Want to add a feature? Have a better joke? Pull requests are welcome!
 
 ## 🙏 Acknowledgments
 
