@@ -25,8 +25,14 @@ A sleek, modern network manager that turns the mundane task of connecting to WiF
 
 ## 👾 Take a look 
 <p align="center">
-<img src=https://github.com/elyziumayo/Rofi-networkmanager/blob/b85d6394c3d253cfc13819a514eb6dff9ff7454c/image.png>
+<img src=https://github.com/elyziumayo/Rofi-networkmanager/blob/233a0c9a327551481a32adf7ccf5b8af53169c98/assets/v1-1.png>
 </p>
+<details>
+  <summary><i>Version(1.0)</i></summary>
+<p align="center">
+<img src=https://github.com/elyziumayo/Rofi-networkmanager/blob/925d0fa67682c4f400d5da6414d164882ddc5f5e/assets/v1.0.png>
+</p>
+</details>
 
 ## 🛠️ Prerequisites
 
