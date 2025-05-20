@@ -1,243 +1,264 @@
 #!/bin/bash
 
-# Dependencies: network-manager, rofi, notify-send
+# Configuration
+THEME_FILE="$HOME/Scripts/wifi.rasi"
+LOCK_SYMBOL="🔒"
+UNLOCK_SYMBOL="🔓"
+REFRESH_SYMBOL="🔄"
+SETTINGS_SYMBOL="⚙️"
+SAVED_SYMBOL="💾"
+BACK_SYMBOL="⬅️"
+CONNECT_SYMBOL="▶️"
+FORGET_SYMBOL="❌"
+WIFI_SYMBOL="📶"
+WIRED_SYMBOL="🔌"
+LOOPBACK_SYMBOL="🔄"
+OTHER_SYMBOL="🔗"
+NETWORK_TOGGLE_SYMBOL="🔌"
+HIDDEN_NETWORK_SYMBOL="👻"
 
-# Function to get the list of available WiFi networks
-get_wifi_list() {
-    first_line=true
-
-    # Show notification while fetching the Wi-Fi list
-    notify-send "WiFi" "Fetching available Wi-Fi networks..."
-
-    # Get detailed WiFi network information
-    nmcli --field SSID,BSSID,SECURITY,BARS,SIGNAL,BANDWIDTH,MODE,CHAN,RATE device wifi list | \
-    while read -r line; do
-        if [[ -z "$line" ]]; then
-            continue
-        fi
-
-        if [[ "$first_line" == true ]]; then
-            echo "$line" 
-            first_line=false
-        else
-            ssid=$(echo "$line" | awk '{print $1}')
-            security=$(echo "$line" | awk '{print $3}')
-            
-            if [[ "$security" == *"WPA"* || "$security" == *"WEP"* ]]; then
-                marker=""  # Secured network
-            else
-                marker=""  # Open network
-            fi
-
-            echo "$marker $line"
-        fi
-    done | column -t -s $'\t'  # Format output into columns
+# Helper Functions
+show_menu() {
+    local options="$1"
+    local prompt="$2"
+    echo -e "$options" | rofi_cmd -dmenu -i -p "$prompt"
 }
 
-# Function to get the list of saved networks
-get_saved_networks() {
-    # Add back option as the first line
-    echo "󰌍 Back to Main Menu"
-    echo ""  # Empty line for separation
+rofi_cmd() {
+    if [[ -f "$THEME_FILE" ]]; then
+        rofi -theme "$THEME_FILE" "$@" -kb-cancel "Escape"
+    else
+        rofi "$@" -kb-cancel "Escape"
+    fi
+}
+
+get_input() {
+    local prompt="$1"
+    local is_password="${2:-false}"
+    local lines="${3:-0}"
+    local network_name="${4:-}"
     
-    # List saved connections with type information
-    nmcli -t -f NAME,TYPE connection show | while IFS=':' read -r name type; do
-        # Remove any leading/trailing whitespace from name
-        name=$(echo "$name" | xargs)
+    if [[ "$is_password" == "true" ]]; then
+        rofi_cmd -dmenu -p "$prompt" -password -lines "$lines"
+    else
+        rofi_cmd -dmenu -p "$prompt" -lines "$lines"
+    fi
+}
+
+handle_escape() {
+    local callback="$1"
+    local input="$2"
+    local network_name="${3:-}"
+    
+    if [[ -z "$input" ]]; then
+        if [[ -n "$network_name" ]]; then
+            notify "Cancelled" "Password entry cancelled for $network_name" "normal"
+        fi
+        $callback
+        return 1
+    fi
+    return 0
+}
+
+notify() {
+    local title="$1"
+    local message="$2"
+    local urgency="${3:-normal}"
+    notify-send -u "$urgency" "$title" "$message"
+}
+
+# Network Functions
+format_network_line() {
+    local line="$1"
+    local security=$(echo "$line" | awk '{print $3}')
+    local symbol="$([[ "$security" == "--" ]] && echo "$UNLOCK_SYMBOL" || echo "$LOCK_SYMBOL")"
+    local ssid=$(echo "$line" | awk '{print $1}')
+    local rest=$(echo "$line" | cut -d' ' -f2-)
+    echo "$symbol $ssid $rest"
+}
+
+get_networks() {
+    echo "____________________________________________________________________________________________________"
+    echo " SSID                       BSSID        SECURITY   BARS  SIGNAL  BANDWIDTH  MODE  CHAN    RATE"
+    echo "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾"
+    
+    nmcli -f SSID,BSSID,SECURITY,BARS,SIGNAL,BANDWIDTH,MODE,CHAN,RATE device wifi list | tail -n +2 | while read -r line; do
+        format_network_line "$line"
+    done
+}
+
+get_saved_networks() {
+    nmcli -g NAME,UUID,TYPE connection show | sort | while IFS=: read -r name uuid type; do
         case "$type" in
-            "802-11-wireless")
-                echo "󰖩 $name"  # WiFi symbol
-                ;;
-            "802-3-ethernet")
-                echo "󰈀 $name"  # Ethernet symbol
-                ;;
-            "tun")
-                echo "󰖂 $name"  # VPN symbol
-                ;;
-            "bridge")
-                echo "󰯎 $name"  # Bridge symbol
-                ;;
-            *)
-                echo "󰤭 $name"  # Generic network symbol for other types
-                ;;
+            "802-11-wireless") echo "$WIFI_SYMBOL $name:$uuid:$type" ;;
+            "802-3-ethernet") echo "$WIRED_SYMBOL $name:$uuid:$type" ;;
+            "loopback"|"lo") echo "$LOOPBACK_SYMBOL $name:$uuid:$type" ;;
+            *) echo "$OTHER_SYMBOL $name:$uuid:$type" ;;
         esac
     done
 }
 
-# Function to determine the current network state and return the toggle option
-toggle_networks() {
-    # Get the current network status (check if networking is enabled)
-    network_status=$(nmcli networking)
-
-    if [[ "$network_status" == "enabled" ]]; then
-        echo "󰖪 Disable Networking"
+connect_to_network() {
+    local selection="$1"
+    
+    if [[ "$selection" == *"SSID"* ]] || [[ "$selection" == --------* ]]; then
+        main
+        return
+    fi
+    
+    selection=$(echo "$selection" | sed -E "s/^[^ ]+ //")
+    local bssid=$(echo "$selection" | grep -o -E "([0-9A-F]{2}:){5}[0-9A-F]{2}")
+    local ssid=$(echo "$selection" | sed -E "s/(.*)$bssid.*/\1/" | xargs)
+    
+    [[ -z "$ssid" ]] && exit 1
+    
+    local security=$(echo "$selection" | grep -o -E "(WPA|WEP|WPA2|--)")
+    
+    notify "Connecting" "Connecting to $ssid..." "low"
+    
+    if [[ "$security" != "--" ]]; then
+        local password=$(get_input "Password" true 0 "$ssid")
+        handle_escape main "$password" "$ssid" || return
+        
+        if nmcli device wifi connect "$ssid" password "$password"; then
+            notify "Connected" "Successfully connected to $ssid" "normal"
+        else
+            notify "Connection Failed" "Failed to connect to $ssid" "critical"
+        fi
     else
-        echo "󰖩 Enable Networking"
+        if nmcli device wifi connect "$ssid"; then
+            notify "Connected" "Successfully connected to $ssid" "normal"
+        else
+            notify "Connection Failed" "Failed to connect to $ssid" "critical"
+        fi
     fi
 }
 
-# Get the current networking option (this will be the first line)
-network_option=$(toggle_networks)
+connect_hidden_network() {
+    local ssid=$(get_input "Enter SSID")
+    handle_escape show_settings "$ssid" || return
+    
+    local security=$(show_menu "WPA/WPA2\nWEP\nNone" "Security Type")
+    handle_escape show_settings "$security" || return
+    
+    notify "Connecting" "Connecting to hidden network $ssid..." "low"
+    
+    if [[ "$security" != "None" ]]; then
+        local password=$(get_input "Password" true 0 "$ssid")
+        handle_escape show_settings "$password" "$ssid" || return
+        
+        if nmcli device wifi connect "$ssid" password "$password" hidden yes; then
+            notify "Connected" "Successfully connected to hidden network $ssid" "normal"
+        else
+            notify "Connection Failed" "Failed to connect to hidden network $ssid" "critical"
+        fi
+    else
+        if nmcli device wifi connect "$ssid" hidden yes; then
+            notify "Connected" "Successfully connected to hidden network $ssid" "normal"
+        else
+            notify "Connection Failed" "Failed to connect to hidden network $ssid" "critical"
+        fi
+    fi
+}
 
-# Add reload option
-reload_option="󰑐 Reload Networks"
+show_saved_networks() {
+    local saved=$(get_saved_networks)
+    local selection=$(show_menu "$BACK_SYMBOL Back\n$saved" "Saved Networks")
+    
+    if ! handle_escape show_settings "$selection" || [[ "$selection" == "$BACK_SYMBOL Back" ]]; then
+        show_settings
+        return
+    fi
+    
+    local network_info=$(echo "$selection" | sed -E "s/^[^ ]+ //")
+    local network_name=$(echo "$network_info" | cut -d: -f1)
+    local action=$(show_menu "$CONNECT_SYMBOL Connect\n$FORGET_SYMBOL Forget\n$BACK_SYMBOL Back" "$network_name")
+    
+    if ! handle_escape show_saved_networks "$action" || [[ "$action" == "$BACK_SYMBOL Back" ]]; then
+        show_saved_networks
+        return
+    fi
+    
+    case "$action" in
+        "$CONNECT_SYMBOL Connect")
+            notify "Connecting" "Connecting to $network_name..." "low"
+            if nmcli connection up "$network_name"; then
+                notify "Connected" "Successfully connected to $network_name" "normal"
+            else
+                notify "Connection Failed" "Failed to connect to $network_name" "critical"
+            fi
+            ;;
+        "$FORGET_SYMBOL Forget")
+            if nmcli connection delete "$network_name"; then
+                notify "Success" "Network $network_name has been forgotten" "normal"
+            else
+                notify "Error" "Failed to forget network $network_name" "critical"
+            fi
+            show_saved_networks
+            ;;
+    esac
+}
 
-# Add hidden network option
-hidden_network_option="󰖪 Add Hidden Network"
+show_settings() {
+    local network_status=$(nmcli networking)
+    local network_toggle_text="$([[ "$network_status" == "enabled" ]] && echo "$NETWORK_TOGGLE_SYMBOL Disable Networking" || echo "$NETWORK_TOGGLE_SYMBOL Enable Networking")"
+    
+    local options="$network_toggle_text\n$HIDDEN_NETWORK_SYMBOL Connect to Hidden Network\n$SAVED_SYMBOL Show Saved Networks\n$BACK_SYMBOL Back"
+    local selection=$(show_menu "$options" "Settings")
+    
+    if ! handle_escape main "$selection" || [[ "$selection" == "$BACK_SYMBOL Back" ]]; then
+        main
+        return
+    fi
+    
+    case "$selection" in
+        "$NETWORK_TOGGLE_SYMBOL Disable Networking")
+            if nmcli networking off; then
+                notify "Networking Disabled" "All network connections have been disabled" "normal"
+            else
+                notify "Error" "Failed to disable networking" "critical"
+            fi
+            show_settings
+            ;;
+        "$NETWORK_TOGGLE_SYMBOL Enable Networking")
+            if nmcli networking on; then
+                notify "Networking Enabled" "Network connections have been enabled" "normal"
+            else
+                notify "Error" "Failed to enable networking" "critical"
+            fi
+            show_settings
+            ;;
+        "$HIDDEN_NETWORK_SYMBOL Connect to Hidden Network")
+            connect_hidden_network
+            ;;
+        "$SAVED_SYMBOL Show Saved Networks")
+            show_saved_networks
+            ;;
+    esac
+}
 
-# Get the list of networks (this will be the rest of the lines)
-networks=$(get_wifi_list)
-
-# Add the option to view saved networks after disabling networking
-view_saved_networks_option="󰋊 View Saved Networks"
-
-# Combine all options and networks
-full_list="$network_option\n$reload_option\n$hidden_network_option\n$view_saved_networks_option\n$networks"
-
-# Show networks in Rofi for selection
-while true; do
-    chosen_network=$(echo -e "$full_list" | \
-        rofi -dmenu -i -p "Select WiFi Network" \
-        -theme ~/Scripts/wifi.rasi )
-
-    # Exit if no network was chosen (Escape pressed)
-    if [[ -z "$chosen_network" ]]; then
+main() {
+    notify "Network Manager" "Scanning for networks..." "low"
+    local networks=$(get_networks)
+    local selection=$(show_menu "$REFRESH_SYMBOL Refresh\n$SETTINGS_SYMBOL Settings\n$networks" "WiFi Networks")
+    
+    if ! handle_escape exit "$selection"; then
         exit 0
     fi
+    
+    case "$selection" in
+        "$REFRESH_SYMBOL Refresh")
+            notify "Refreshing" "Scanning for networks..." "low"
+            nmcli device wifi rescan
+            main
+            ;;
+        "$SETTINGS_SYMBOL Settings")
+            show_settings
+            ;;
+        *)
+            connect_to_network "$selection"
+            ;;
+    esac
+}
 
-    # Handle network toggle (enable/disable)
-    if [[ "$chosen_network" == "$network_option" ]]; then
-        if [[ "$network_option" == "󰖪 Disable Networking" ]]; then
-            if ! nmcli networking off; then
-                notify-send "Network" "Failed to disable networking."
-                continue
-            fi
-            notify-send "Network" "All networks disabled."
-        else
-            if ! nmcli networking on; then
-                notify-send "Network" "Failed to enable networking."
-                continue
-            fi
-            notify-send "Network" "All networks enabled."
-        fi
-        break
-    fi
-
-    # Handle reload option
-    if [[ "$chosen_network" == "$reload_option" ]]; then
-        notify-send "WiFi" "Reloading networks..."
-        if ! nmcli device wifi rescan; then
-            notify-send "WiFi" "Failed to rescan networks."
-            continue
-        fi
-        sleep 1  # Give time for the scan to complete
-        networks=$(get_wifi_list)
-        full_list="$network_option\n$reload_option\n$hidden_network_option\n$view_saved_networks_option\n$networks"
-        continue
-    fi
-
-    # Handle hidden network connection
-    if [[ "$chosen_network" == "$hidden_network_option" ]]; then
-        # Get SSID for hidden network
-        hidden_ssid=$(echo -e "󰌍 Back to Main Menu\n" | \
-            rofi -dmenu -i -p "Enter Hidden Network SSID" -lines 0 -theme ~/Scripts/wifi.rasi)
-
-        # Handle back option or Escape for SSID
-        if [[ -z "$hidden_ssid" ]] || [[ "$hidden_ssid" == "󰌍 Back to Main Menu" ]]; then
-            continue  # Return to main menu
-        fi
-
-        # Get password for hidden network
-        password=$(echo -e "󰌍 Back to Networks\n" | \
-            rofi -dmenu -i -p "Enter Password" -password -lines 0 -theme ~/Scripts/wifi.rasi -theme-str 'listview {lines: 4;}')
-
-        # Handle back option or Escape for password
-        if [[ -z "$password" ]] || [[ "$password" == "󰌍 Back to Networks" ]]; then
-            continue  # Return to main menu
-        fi
-
-        # Try to connect to the hidden network
-        notify-send "WiFi" "Attempting to connect to hidden network $hidden_ssid..."
-        if nmcli device wifi connect "$hidden_ssid" password "$password" hidden yes; then
-            notify-send "WiFi" "Successfully connected to hidden network $hidden_ssid"
-            break  # Exit to end the script after successful connection
-        else
-            notify-send "WiFi" "Failed to connect to hidden network $hidden_ssid"
-            continue  # Return to main menu after failed connection
-        fi
-    fi
-
-    # Handle viewing saved networks
-    if [[ "$chosen_network" == "$view_saved_networks_option" ]]; then
-        while true; do
-            saved_networks=$(get_saved_networks)
-
-            # Display saved networks in Rofi
-            selected_saved_network=$(echo -e "$saved_networks" | \
-                rofi -dmenu -i -p "Select Saved Network to Forget" \
-                -theme ~/Scripts/wifi.rasi)
-
-            # Return to main menu if Escape pressed
-            if [[ -z "$selected_saved_network" ]]; then
-                break
-            fi
-
-            # Handle back option
-            if [[ "$selected_saved_network" == "󰌍 Back to Main Menu" ]]; then
-                break
-            fi
-
-            # Extract network name without the symbol
-            network_name=$(echo "$selected_saved_network" | cut -d' ' -f2-)
-
-            # Forget the selected saved network
-            nmcli connection delete "$network_name"
-            notify-send "WiFi" "Network '$network_name' forgotten successfully."
-            break  # Break out of the inner loop to return to main menu
-        done
-        continue  # Return to main menu
-    fi
-
-    # Handle regular network connection
-    ssid=$(echo "$chosen_network" | awk '{print $2}')
-    notify-send "WiFi" "Attempting to connect to $ssid..."
-
-    # Check if the network is already known
-    if nmcli connection show | grep -q "^$ssid "; then
-        nmcli connection up "$ssid"
-    else
-        # Check if network is secured
-        if echo "$chosen_network" | grep -q "WPA\|WEP"; then
-            while true; do
-                # Get password from Rofi prompt with back option
-                password=$(echo -e "󰌍 Back to Networks\n" | \
-                    rofi -dmenu -i -p "Enter Password" -password -lines 0 -theme ~/Scripts/wifi.rasi -theme-str 'listview {lines: 4;}') 
-
-                # Handle back option or Escape
-                if [[ -z "$password" ]] || [[ "$password" == "󰌍 Back to Networks" ]]; then
-                    break
-                fi
-
-                # Try to connect to the network with the password
-                if nmcli device wifi connect "$ssid" password "$password"; then
-                    notify-send "WiFi" "Successfully connected to $ssid"
-                    break 2  # Exit both loops on success
-                else
-                    notify-send "WiFi" "Failed to connect to $ssid. Incorrect password or other error."
-                    continue
-                fi
-            done
-            continue
-        else
-            # Connect to an open network
-            if nmcli device wifi connect "$ssid"; then
-                notify-send "WiFi" "Successfully connected to $ssid"
-                break
-            else
-                notify-send "WiFi" "Failed to connect to $ssid"
-                continue
-            fi
-        fi
-    fi
-done
-
+main
