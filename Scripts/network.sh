@@ -79,7 +79,7 @@ format_network_line() {
 
 get_networks() {
     echo "____________________________________________________________________________________________________"
-    echo " SSID                       BSSID             SECURITY   BARS  SIGNAL  BANDWIDTH  MODE  CHAN   RATE"
+    echo " SSID                       BSSID        SECURITY   BARS  SIGNAL  BANDWIDTH  MODE  CHAN    RATE"
     echo "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾"
     
     nmcli -f SSID,BSSID,SECURITY,BARS,SIGNAL,BANDWIDTH,MODE,CHAN,RATE device wifi list | tail -n +2 | while read -r line; do
