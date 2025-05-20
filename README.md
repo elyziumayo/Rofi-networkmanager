@@ -25,8 +25,14 @@ A sleek, modern network manager that turns the mundane task of connecting to WiF
 
 ## 👾 Take a look 
 <p align="center">
-<img src=https://github.com/elyziumayo/Rofi-networkmanager/blob/b85d6394c3d253cfc13819a514eb6dff9ff7454c/image.png>
+<img src=https://github.com/elyziumayo/Rofi-networkmanager/blob/233a0c9a327551481a32adf7ccf5b8af53169c98/assets/v1-1.png>
 </p>
+<details>
+  <summary><i>Version(1.0)</i></summary>
+<p align="center">
+<img src=https://github.com/elyziumayo/Rofi-networkmanager/blob/925d0fa67682c4f400d5da6414d164882ddc5f5e/assets/v1.0.png>
+</p>
+</details>
 
 ## 🛠️ Prerequisites
 
@@ -72,10 +78,6 @@ The script uses a custom Rofi theme (`wifi.rasi`) inspired by [Adi1090x's](https
 > 🎨 **Theme Credit:** The beautiful Rofi theme used in this project is based on [Adi1090x's Rofi Collection](https://github.com/adi1090x/rofi.git). Check out their repository for more awesome themes and customizations!
 
 Make it yours! Change colors, fonts, or add more unicorns 🦄 - we won't stop you!
-
-## ✨ Version 1.1
-
-New version in `test` branch. It's like magic, but with more bugs! Report them if you find any!
 
 ## 🐛 Troubleshooting
 
