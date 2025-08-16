@@ -16,6 +16,7 @@ LOOPBACK_SYMBOL="🔄"
 OTHER_SYMBOL="🔗"
 NETWORK_TOGGLE_SYMBOL="🔌"
 HIDDEN_NETWORK_SYMBOL="👻"
+CONNECTED_SYMBOL="✅"
 
 # Helper Functions
 show_menu() {
@@ -68,22 +69,35 @@ notify() {
 }
 
 # Network Functions
+get_current_wifi_ssid() {
+    nmcli -t -f active,ssid dev wifi | grep '^yes:' | cut -d: -f2
+}
+
 format_network_line() {
     local line="$1"
+    local current_ssid="$2"
     local security=$(echo "$line" | awk '{print $3}')
     local symbol="$([[ "$security" == "--" ]] && echo "$UNLOCK_SYMBOL" || echo "$LOCK_SYMBOL")"
     local ssid=$(echo "$line" | awk '{print $1}')
     local rest=$(echo "$line" | cut -d' ' -f2-)
-    echo "$symbol $ssid $rest"
+    
+    # Check if this is the currently connected network
+    if [[ "$ssid" == "$current_ssid" ]]; then
+        echo "$CONNECTED_SYMBOL $ssid $rest"
+    else
+        echo "$symbol $ssid $rest"
+    fi
 }
 
 get_networks() {
+    local current_ssid=$(get_current_wifi_ssid)
+    
     echo "____________________________________________________________________________________________________"
     echo " SSID                       BSSID        SECURITY   BARS  SIGNAL  BANDWIDTH  MODE  CHAN    RATE"
     echo "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾"
     
     nmcli -f SSID,BSSID,SECURITY,BARS,SIGNAL,BANDWIDTH,MODE,CHAN,RATE device wifi list | tail -n +2 | while read -r line; do
-        format_network_line "$line"
+        format_network_line "$line" "$current_ssid"
     done
 }
 
