@@ -95,7 +95,7 @@ get_networks() {
     echo "____________________________________________________________________________________________________"
     echo " SSID                       BSSID        SECURITY   BARS  SIGNAL  BANDWIDTH  MODE  CHAN    RATE"
     echo "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾"
-    
+     
     nmcli -f SSID,BSSID,SECURITY,BARS,SIGNAL,BANDWIDTH,MODE,CHAN,RATE device wifi list | tail -n +2 | while read -r line; do
         format_network_line "$line" "$current_ssid"
     done
@@ -109,6 +109,27 @@ get_saved_networks() {
             "loopback"|"lo") echo "$LOOPBACK_SYMBOL $name:$uuid:$type" ;;
             *) echo "$OTHER_SYMBOL $name:$uuid:$type" ;;
         esac
+    done
+}
+
+# connect functions with retry logic
+connect_with_password() {
+    local ssid="$1"
+    local prompt_text="${2:-Password}"
+    
+    while true; do
+        local password=$(get_input "$prompt_text" true 0 "$ssid")
+        handle_escape main "$password" "$ssid" || return
+        
+        notify "Connecting" "Connecting to $ssid..." "low"
+        
+        if nmcli device wifi connect "$ssid" password "$password"; then
+            notify "Connected" "Successfully connected to $ssid" "normal"
+            return 0
+        else
+            notify "Connection Failed" "Wrong password for $ssid. Please try again." "critical"
+            prompt_text="Wrong password! Try again"
+        fi
     done
 }
 
@@ -128,18 +149,10 @@ connect_to_network() {
     
     local security=$(echo "$selection" | grep -o -E "(WPA|WEP|WPA2|--)")
     
-    notify "Connecting" "Connecting to $ssid..." "low"
-    
     if [[ "$security" != "--" ]]; then
-        local password=$(get_input "Password" true 0 "$ssid")
-        handle_escape main "$password" "$ssid" || return
-        
-        if nmcli device wifi connect "$ssid" password "$password"; then
-            notify "Connected" "Successfully connected to $ssid" "normal"
-        else
-            notify "Connection Failed" "Failed to connect to $ssid" "critical"
-        fi
+        connect_with_password "$ssid"
     else
+        notify "Connecting" "Connecting to $ssid..." "low"
         if nmcli device wifi connect "$ssid"; then
             notify "Connected" "Successfully connected to $ssid" "normal"
         else
@@ -155,18 +168,22 @@ connect_hidden_network() {
     local security=$(show_menu "WPA/WPA2\nWEP\nNone" "Security Type")
     handle_escape show_settings "$security" || return
     
-    notify "Connecting" "Connecting to hidden network $ssid..." "low"
-    
     if [[ "$security" != "None" ]]; then
-        local password=$(get_input "Password" true 0 "$ssid")
-        handle_escape show_settings "$password" "$ssid" || return
-        
-        if nmcli device wifi connect "$ssid" password "$password" hidden yes; then
-            notify "Connected" "Successfully connected to hidden network $ssid" "normal"
-        else
-            notify "Connection Failed" "Failed to connect to hidden network $ssid" "critical"
-        fi
+        while true; do
+            local password=$(get_input "Password" true 0 "$ssid")
+            handle_escape show_settings "$password" "$ssid" || return
+            
+            notify "Connecting" "Connecting to hidden network $ssid..." "low"
+            
+            if nmcli device wifi connect "$ssid" password "$password" hidden yes; then
+                notify "Connected" "Successfully connected to hidden network $ssid" "normal"
+                return 0
+            else
+                notify "Connection Failed" "Wrong password for $ssid. Please try again." "critical"
+            fi
+        done
     else
+        notify "Connecting" "Connecting to hidden network $ssid..." "low"
         if nmcli device wifi connect "$ssid" hidden yes; then
             notify "Connected" "Successfully connected to hidden network $ssid" "normal"
         else
