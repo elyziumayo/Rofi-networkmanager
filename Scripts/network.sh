@@ -17,6 +17,7 @@ OTHER_SYMBOL="🔗"
 NETWORK_TOGGLE_SYMBOL="🔌"
 HIDDEN_NETWORK_SYMBOL="👻"
 CONNECTED_SYMBOL="✅"
+DISCONNECT_SYMBOL=""
 
 # Helper Functions
 show_menu() {
@@ -38,10 +39,10 @@ rofi_cmd_settings() {
     if [[ -f "$THEME_FILE" ]]; then
         rofi -theme "$THEME_FILE" \
              -theme-str 'window{width:400px;}' \
-             -theme-str 'listview{columns:1; lines:4; spacing:5px;}' \
-             -theme-str 'element{padding:9px;}' \
+             -theme-str 'listview{columns:1; lines:5; spacing:2px;}' \
+             -theme-str 'element{padding:5px;}' \
              -theme-str 'element-text{font:"JetBrains Mono Nerd Font Propo 10";}' \
-             -theme-str 'inputbar{background-image:none; padding:8px;}' \
+             -theme-str 'inputbar{background-image:none; padding:2px;}' \
              -theme-str 'entry{padding:8px;}' \
              -theme-str 'textbox-prompt-colon{background-color:	#6670ad;str:"  ";padding:8px;}'\
              "$@" -kb-cancel "Escape"
@@ -74,7 +75,7 @@ rofi_cmd_security() {
         rofi -theme "$THEME_FILE" \
              -theme-str 'window{width:345px;}' \
              -theme-str 'listview{columns:1; lines:3;}' \
-             -theme-str 'element{padding:10px;}' \
+             -theme-str 'element{padding:5px;}' \
              -theme-str 'element-text{font:"JetBrains Mono Nerd Font Propo 10";}' \
              -theme-str 'inputbar{background-image:none; padding:8px;}' \
              -theme-str 'textbox-prompt-colon{background-color:#6670ad;str:"  ";padding:8px;}' \
@@ -90,7 +91,7 @@ rofi_cmd_saved() {
         rofi -theme "$THEME_FILE" \
              -theme-str 'window{width:345px;}' \
              -theme-str 'listview{columns:1;lines:5;}' \
-             -theme-str 'element{padding:8px;}' \
+             -theme-str 'element{padding:5px;}' \
              -theme-str 'element-text{font:"JetBrains Mono Nerd Font Propo 10";}' \
              -theme-str 'inputbar{background-image:none; padding:8px;}' \
              -theme-str 'textbox-prompt-colon{background-color:#6670ad;str:"  ";padding:8px;}' \
@@ -106,7 +107,7 @@ rofi_cmd_actions() {
         rofi -theme "$THEME_FILE" \
              -theme-str 'window{width:345px;}' \
              -theme-str 'listview{columns:1; lines:3; spacing:3px;}' \
-             -theme-str 'element{padding:10px;}' \
+             -theme-str 'element{padding:5px;}' \
              -theme-str 'element-text{font:"JetBrains Mono Nerd Font Propo 10";}' \
              -theme-str 'inputbar{background-image:none; padding:8px;}' \
              -theme-str 'textbox-prompt-colon{background-color:#6670ad;str:"  ";padding:8px;}' \
@@ -163,6 +164,10 @@ get_current_wifi_ssid() {
     nmcli -t -f active,ssid dev wifi | grep '^yes:' | cut -d: -f2
 }
 
+get_active_wifi_connection() {
+    nmcli -t -f NAME,TYPE connection show --active | grep "802-11-wireless" | head -1 | cut -d: -f1
+}
+
 format_network_line() {
     local line="$1"
     local current_ssid="$2"
@@ -183,10 +188,10 @@ get_networks() {
     local current_ssid=$(get_current_wifi_ssid)
     
     echo " ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟ ͟  "
-    echo " SSID                       BSSID        SECURITY   BARS  SIGNAL  BANDWIDTH  MODE  CHAN    RATE"
+    echo " SSID                       BSSID        SECURITY   BARS  SIGNAL  BANDWIDTH  MODE  CHAN    RATE"
     echo "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾"
      
-    nmcli -f SSID,BSSID,SECURITY,BARS,SIGNAL,BANDWIDTH,MODE,CHAN,RATE device wifi list | tail -n +2 | while read -r line; do
+    nmcli -f SSID,BSSID,SECURITY,BARS,SIGNAL,BANDWIDTH,MODE,CHAN,RATE device wifi list | awk 'NR==1 || $1 != "--"' | tail -n +2 | while read -r line; do
         format_network_line "$line" "$current_ssid"
     done
 }
@@ -227,7 +232,7 @@ connect_with_password() {
 connect_to_network() {
     local selection="$1"
     
-    if [[ "$selection" == *"SSID"* ]] || [[ "$selection" == --------* ]]; then
+    if [[ "$selection" == *"SSID"* ]] || [[ "$selection" == *"‾‾‾‾"* ]] || [[ "$selection" == *"͟ ͟ ͟"* ]]; then
         main
         return
     fi
@@ -259,6 +264,33 @@ connect_to_network() {
             notify "Connected" "Successfully connected to $ssid" "normal"
         else
             notify "Connection Failed" "Failed to connect to $ssid" "critical"
+        fi
+    fi
+}
+
+disconnect_wifi() {
+    local active_connection=$(nmcli -t -f NAME,TYPE connection show --active | grep "802-11-wireless" | head -1 | cut -d: -f1)
+    
+    if [[ -n "$active_connection" ]]; then
+        if nmcli connection down "$active_connection"; then
+            notify "Disconnected" "WiFi disconnected successfully" "normal"
+
+            sleep 0.5
+        else
+            notify "Error" "Failed to disconnect WiFi" "critical"
+        fi
+    else
+
+        local wifi_device=$(nmcli device status | grep "wifi.*connected" | awk '{print $1}' | head -1)
+        if [[ -n "$wifi_device" ]]; then
+            if nmcli device disconnect "$wifi_device"; then
+                notify "Disconnected" "WiFi disconnected successfully" "normal"
+                sleep 0.5
+            else
+                notify "Error" "Failed to disconnect WiFi device" "critical"
+            fi
+        else
+            notify "No Connection" "No active WiFi connection found" "normal"
         fi
     fi
 }
@@ -357,7 +389,15 @@ show_settings() {
     local network_status=$(nmcli networking)
     local network_toggle_text="$([[ "$network_status" == "enabled" ]] && echo "$NETWORK_TOGGLE_SYMBOL Disable Networking" || echo "$NETWORK_TOGGLE_SYMBOL Enable Networking")"
     
-    local options="$network_toggle_text\n$HIDDEN_NETWORK_SYMBOL Connect to Hidden Network\n$SAVED_SYMBOL Show Saved Networks\n$BACK_SYMBOL Back"
+    local options="$network_toggle_text"
+    
+    # Force refresh device status and check more strictly for connected WiFi
+    nmcli device status > /dev/null 2>&1
+    if nmcli -t -f TYPE,STATE device status | grep -q "^wifi:connected$"; then
+        options="$options\n$DISCONNECT_SYMBOL Disconnect Current WiFi"
+    fi
+    
+    options="$options\n$HIDDEN_NETWORK_SYMBOL Connect to Hidden Network\n$SAVED_SYMBOL Show Saved Networks\n$BACK_SYMBOL Back"
     
     # Use custom rofi command for settings menu
     local selection=$(echo -e "$options" | rofi_cmd_settings -dmenu -i -p "Settings")
@@ -383,6 +423,10 @@ show_settings() {
                 notify "Error" "Failed to enable networking" "critical"
             fi
             show_settings
+            ;;
+        "$DISCONNECT_SYMBOL"*)
+            disconnect_wifi
+            exit 0
             ;;
         "$HIDDEN_NETWORK_SYMBOL Connect to Hidden Network")
             connect_hidden_network
@@ -418,3 +462,6 @@ main() {
 }
 
 main
+
+
+
