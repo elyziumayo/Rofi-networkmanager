@@ -48,8 +48,13 @@ A sleek, modern network manager that turns the mundane task of connecting to WiF
 </p>
 </details>
 
-## 🏴󠁢󠁲󠁡󠁰󠁿 Installation
+## 📖 Need Help? We Got You!
 > [!TIP]
+> Confused? Lost? WiFi got you crying? Don't panic! Check out our [Usage Guide](usage.md) 
+> - it's like a GPS for your WiFi journey, but with more emojis and less traffic jams.
+
+## 🏴󠁢󠁲󠁡󠁰󠁿 Installation
+
 > 1. Clone this repo (or download it, we don't judge)
 > ```bash
 > git clone https://github.com/elyziumayo/Rofi-networkmanager.git
