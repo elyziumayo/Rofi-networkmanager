@@ -25,9 +25,9 @@ A sleek, modern network manager that turns the mundane task of connecting to WiF
 > [!IMPORTANT]
 >  ```bash
 > ### You'll need these bad boys
-> 1.networkmanager   # Because we need to actually connect to networks
-> 2.rofi            # The pretty menu maker
-> 3.notify-send     # For those sweet notifications
+> 1.networkmanager   
+> 2.rofi            
+> 3.notify-send     
 > 4.ttf-jetbrains-mono-nerd
 > 5.otf-font-awesome
 > ```
